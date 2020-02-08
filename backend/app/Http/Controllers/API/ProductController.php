@@ -16,6 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
+        header('Access-Control-Allow-Origin: *');
+
         $products = Product::all();
 
         return response()
