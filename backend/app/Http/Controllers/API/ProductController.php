@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Product;
+use App\Http\Resources\Product as ProductResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -12,16 +13,13 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
         header('Access-Control-Allow-Origin: *');
 
-        $products = Product::all();
-
-        return response()
-            ->json($products);
+        return ProductResource::collection(Product::all());
     }
 
     /**
