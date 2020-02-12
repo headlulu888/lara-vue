@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Product;
 use App\Http\Resources\Product as ProductResource;
+use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class ProductController extends Controller
@@ -13,13 +14,16 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         header('Access-Control-Allow-Origin: *');
 
-        return ProductResource::collection(Product::all());
+        $per_page = $request->per_page ? $request->per_page : 15;
+
+        return ProductResource::collection(Product::paginate($per_page));
     }
 
     /**
@@ -37,14 +41,11 @@ class ProductController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Response
+     * @return ProductResource
      */
     public function show($id)
     {
-        $product = Product::find($id);
-
-        return response()
-            ->json($product);
+        return new ProductResource(Product::find($id));
     }
 
     /**
